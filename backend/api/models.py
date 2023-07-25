@@ -22,7 +22,7 @@ class Tag(models.Model):
     )
 
     class Meta:
-        ordering = [-'id']
+        ordering = ('name',)
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -30,7 +30,7 @@ class Tag(models.Model):
         return self.name
 
 
-class Ingridient(models.Model):
+class Ingredient(models.Model):
     name = models.CharField(
         'Название',
         max_length=200,
@@ -41,7 +41,7 @@ class Ingridient(models.Model):
     )
 
     class Meta:
-        ordering = [-'id']
+        ordering = ('name',)
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
 
@@ -65,19 +65,19 @@ class Recipe(models.Model):
         upload_to='media/',
     )
     description = models.TextField('Текстовое описание')
-    ingridients = models.ManyToManyField(
-        'Ингридиенты',
+    ingredients = models.ManyToManyField(
+        Ingredient,
+        verbose_name='Ингридиенты',
         related_name='recipes',
-        to=Ingridient,
-        through='IngridientAmount',
+        through='IngredientAmount',
     )
     tags = models.ManyToManyField(
-        'Теги',
+        Tag,
+        verbose_name='Теги',
         related_name='recipes',
-        to=Tag,
     )
 
-    pud_date = models.DateTimeField(
+    pub_date = models.DateTimeField(
         'Дата публикации',
         auto_now_add=True,
         editable=False,
@@ -85,13 +85,12 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         default=1,
-        validators=validators.MinValueValidator(
-            1, message='Проверьте Ваши часы!'
-        )
+        validators=(validators.MinValueValidator(
+            1, message='Проверьте Ваши часы!'),)
     )
 
     class Meta:
-        ordering = [-'id']
+        ordering = ('-pub_date',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -99,26 +98,25 @@ class Recipe(models.Model):
         return self.name
 
 
-class IngridientAmount(models.Model):
-    ingridient = models.ForeignKey(
-        'Ингридиент',
-        Ingridient,
+class IngredientAmount(models.Model):
+    ingredient = models.ForeignKey(
+        Ingredient,
+        verbose_name='Ингридиент',
         on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
-        'Рецепт',
         Recipe,
+        verbose_name='Рецепт',
         on_delete=models.CASCADE,
     )
     amount = models.PositiveSmallIntegerField(
         'Количество',
-        validators=validators.MinValueValidator(
-            1, message='Требуется хотя бы один ингридиент!'
-        )
+        validators=(validators.MinValueValidator(
+            1, message='Требуется хотя бы один ингридиент!'),),
     )
 
     class Meta:
-        ordering = [-'id']
+        ordering = ('-recipe',)
         verbose_name = 'Количества ингридиента'
         verbose_name_plural = 'Количество ингридиентов'
         constraints = [
@@ -131,20 +129,19 @@ class IngridientAmount(models.Model):
 
 class Favorite(models.Model):
     recipe = models.ForeignKey(
-        'Рецепты',
+        Recipe,
+        verbose_name='Рецепты',
         related_name='favorites',
-        to=Recipe,
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
-        'Пользователь',
+        User,
+        verbose_name='Пользователь',
         related_name='favorites',
-        to=User,
         on_delete=models.CASCADE,
     )
 
     class Meta:
-        ordering = ['-id']
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
         constraints = [
@@ -157,20 +154,19 @@ class Favorite(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(
-        'Владелец',
         User,
+        verbose_name='Владелец',
         on_delete=models.CASCADE,
         related_name='cart',
     )
     recipe = models.ForeignKey(
-        'Рецепт',
         Recipe,
+        verbose_name='Рецепт',
         on_delete=models.CASCADE,
         related_name='cart',
     )
 
     class Meta:
-        ordering = ['-id']
         verbose_name = 'Корзина'
         verbose_name_plural = 'В корзине'
         constraints = [
