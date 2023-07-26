@@ -18,6 +18,7 @@ class Tag(models.Model):
     )
     slug = models.SlugField(
         'Слаг',
+        max_length=200,
         unique=True,
     )
 
@@ -35,7 +36,7 @@ class Ingredient(models.Model):
         'Название',
         max_length=200,
     )
-    metric = models.CharField(
+    measurement_unit = models.CharField(
         'Единица измерения',
         max_length=200
     )
@@ -64,7 +65,7 @@ class Recipe(models.Model):
         'Фото',
         upload_to='media/',
     )
-    description = models.TextField('Текстовое описание')
+    text = models.TextField('Текстовое описание')
     ingredients = models.ManyToManyField(
         Ingredient,
         verbose_name='Ингридиенты',
@@ -173,5 +174,30 @@ class Cart(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
                 name='unique recipe in cart',
+            )
+        ]
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(
+        User,
+        verbose_name='Подписчик',
+        related_name='follower',
+        on_delete=models.CASCADE,
+    )
+    author = models.ForeignKey(
+        User,
+        verbose_name='Автор',
+        related_name='following',
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['users', 'author'],
+                name='unique follow',
             )
         ]
