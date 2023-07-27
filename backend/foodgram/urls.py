@@ -1,12 +1,8 @@
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework import routers
-
-router = routers.DefaultRouter()
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
+    path('api/', include('users.urls', namespace='api_users')),
+    path('api/', include('api.urls', namespace='api'))
 ]
