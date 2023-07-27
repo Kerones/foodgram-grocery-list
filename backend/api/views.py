@@ -11,17 +11,17 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
-from filters import AuthorAndTagFilter, IngredientSearchFilter
-from pagination import LimitPageNumberPagination
-from permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
-from serializers import (
+from .filters import AuthorAndTagFilter, IngredientSearchFilter
+from .pagination import LimitPageNumberPagination
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from .serializers import (
     SubscriptionSerializer,
     TagSerializer,
     IngredientSerializer,
     ShortRecipeSerializer,
     RecipeSerializer
 )
-from models import (
+from .models import (
     Tag,
     Ingredient,
     IngredientAmount,
