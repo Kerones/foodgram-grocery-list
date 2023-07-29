@@ -47,31 +47,29 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     pagination_class = LimitPageNumberPagination
     filter_class = AuthorAndTagFilter
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = (IsOwnerOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    @action(detail=True, methods=['get', 'delete'],
-            permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=('get', 'delete'),
+            permission_classes=(IsAuthenticated,))
     def favorite(self, request, pk=None):
         if request.method == 'GET':
             return self.add_obj(Favorite, request.user, pk)
         elif request.method == 'DELETE':
             return self.delete_obj(Favorite, request.user, pk)
-        return None
 
-    @action(detail=True, methods=['get', 'delete'],
-            permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=('get', 'delete'),
+            permission_classes=(IsAuthenticated,))
     def shopping_cart(self, request, pk=None):
         if request.method == 'GET':
             return self.add_obj(Cart, request.user, pk)
         elif request.method == 'DELETE':
             return self.delete_obj(Cart, request.user, pk)
-        return None
 
-    @action(detail=False, methods=['get'],
-            permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=('get',),
+            permission_classes=(IsAuthenticated,))
     def download_shopping_cart(self, request):
         final_list = {}
         ingredients = IngredientAmount.objects.filter(

@@ -1,19 +1,31 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.core import validators
+from django.core.validators import MinValueValidator, MaxValueValidator
+from colorfield.fields import ColorField
 
 User = get_user_model()
 
 
 class Tag(models.Model):
+    NAME_LIMIT = 15
+    COLOR_PALETTE = [
+        ('#FFFFFF', 'white', ),
+        ('#000000', 'black', ),
+        ('#0000FF', 'blue', ),
+        ('#FFA500', 'orange', ),
+        ('#008000', 'green', ),
+        ('#800080', 'purple', ),
+        ('#FFFF00', 'yellow', ),
+    ]
+
     name = models.CharField(
         'Название',
         max_length=200,
         unique=True,
     )
-    color = models.CharField(
+    color = ColorField(
         'Цвет',
-        max_length=7,
+        samples=COLOR_PALETTE,
         unique=True,
     )
     slug = models.SlugField(
@@ -28,7 +40,7 @@ class Tag(models.Model):
         verbose_name_plural = 'Теги'
 
     def __str__(self):
-        return self.name
+        return self.name[:self.NAME_LIMIT]
 
 
 class Ingredient(models.Model):
@@ -86,9 +98,12 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         default=1,
-        validators=(validators.MinValueValidator(
-            1, message='Проверьте Ваши часы!'),)
-    )
+        validators=(MinValueValidator(
+            1,
+            message='Время приготовления блюда не может быть меньше минуты'),
+            MaxValueValidator(
+            32767, message='Время приготовления блюда не может быть таким долгим')
+        ))
 
     class Meta:
         ordering = ('-pub_date',)
@@ -112,9 +127,12 @@ class IngredientAmount(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         'Количество',
-        validators=(validators.MinValueValidator(
-            1, message='Требуется хотя бы один ингридиент!'),),
-    )
+        validators=(MinValueValidator(
+            1,
+            message='Чтобы приготовить блюдо нужен хотя бы один ингридиент'),
+            MaxValueValidator(
+            32767, message='Слишком много ингридиентов!')
+        ))
 
     class Meta:
         ordering = ('-recipe',)
@@ -128,23 +146,9 @@ class IngredientAmount(models.Model):
         ]
 
 
-class Favorite(models.Model):
-    recipe = models.ForeignKey(
-        Recipe,
-        verbose_name='Рецепты',
-        related_name='favorites',
-        on_delete=models.CASCADE,
-    )
-    user = models.ForeignKey(
-        User,
-        verbose_name='Пользователь',
-        related_name='favorites',
-        on_delete=models.CASCADE,
-    )
-
+class CustomModel(models.Model):
     class Meta:
-        verbose_name = 'Избранное'
-        verbose_name_plural = 'Избранные'
+        abstract = True
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
@@ -153,16 +157,35 @@ class Favorite(models.Model):
         ]
 
 
-class Cart(models.Model):
+class Favorite(CustomModel):
+    recipe = models.ForeignKey(
+        Recipe,
+        verbose_name='Рецепты',
+        on_delete=models.CASCADE,
+        related_name='favorites',
+    )
     user = models.ForeignKey(
         User,
-        verbose_name='Владелец',
+        verbose_name='Пользователь',
+        on_delete=models.CASCADE,
+        related_name='favorites',
+    )
+
+    class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранные'
+
+
+class Cart(CustomModel):
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
         on_delete=models.CASCADE,
         related_name='cart',
     )
     recipe = models.ForeignKey(
         Recipe,
-        verbose_name='Рецепт',
+        verbose_name='Рецепты',
         on_delete=models.CASCADE,
         related_name='cart',
     )
@@ -170,12 +193,6 @@ class Cart(models.Model):
     class Meta:
         verbose_name = 'Корзина'
         verbose_name_plural = 'В корзине'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name='unique recipe in cart',
-            )
-        ]
 
 
 class Subscription(models.Model):
