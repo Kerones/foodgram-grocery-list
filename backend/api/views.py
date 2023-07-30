@@ -1,14 +1,22 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfgen import canvas
 
+from .models import (
+    Tag,
+    Ingredient,
+    IngredientAmount,
+    Recipe,
+    Cart,
+    Favorite
+)
 from .filters import AuthorAndTagFilter, IngredientSearchFilter
 from .pagination import LimitPageNumberPagination
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
@@ -17,14 +25,6 @@ from .serializers import (
     IngredientSerializer,
     ShortRecipeSerializer,
     RecipeSerializer
-)
-from .models import (
-    Tag,
-    Ingredient,
-    IngredientAmount,
-    Recipe,
-    Cart,
-    Favorite
 )
 
 

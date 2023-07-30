@@ -1,9 +1,8 @@
+from api.models import Subscription
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-
-from api.models import Subscription
 
 User = get_user_model()
 
