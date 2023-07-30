@@ -79,25 +79,24 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorite(self, obj):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return Recipe.objects.filter(favorites__user=user, id=obj.id).exists()
+        return not user.is_anonymous and Recipe.objects.filter(
+            favorites__user=user, id=obj.id).exists()
 
     def get_is_in_cart(self, obj):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return Recipe.objects.filter(cart__user=user, id=obj.id).exists()
+        return not user.is_anonymous and Recipe.objects.filter(
+            cart__user=user, id=obj.id).exists()
 
     def validate(self, data):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError({
-                'ingredients': 'Нужен хоть один ингридиент для рецепта'})
+                'ingredients': 'Нужен хотя бы один ингридиент для рецепта'})
+
         ingredient_list = []
         for ingredient_item in ingredients:
-            ingredient = get_object_or_404(Ingredient,
-                                           id=ingredient_item['id'])
+            ingredient = get_object_or_404(
+                Ingredient, id=ingredient_item['id'])
             if ingredient in ingredient_list:
                 raise serializers.ValidationError('Ингридиенты должны '
                                                   'быть уникальными')
@@ -108,6 +107,19 @@ class RecipeSerializer(serializers.ModelSerializer):
                                     'ингредиента больше 0')
                 })
         data['ingredients'] = ingredients
+        tags = self.initial_data.get('tags')
+        if not tags:
+            raise serializers.ValidationError({
+                'tags': 'Нужен хотя бы один тэг для рецепта'})
+        tags_list = []
+        for tag_item in tags:
+            tag = get_object_or_404(
+                Tag, id=tag_item['id'])
+            if tag in tags_list:
+                raise serializers.ValidationError('Тэги должны '
+                                                  'быть уникальными')
+            tags_list.append(tag)
+        data['tags'] = tags
         return data
 
     def create_ingredients(self, ingredients, recipe):
