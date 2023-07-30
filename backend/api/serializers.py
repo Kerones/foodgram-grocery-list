@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from drf_extra_fields.fields import Base64ImageField
 
-from .models import Recipe, Ingredient, Tag, Subscription, IngredientAmount
+from .models import Ingredient, IngredientAmount, Recipe, Subscription, Tag
 from users.serializers import CustomUserSerializer
 
 User = get_user_model()

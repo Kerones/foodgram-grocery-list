@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Cart, Favorite, Ingredient, Recipe, Tag, Subscription
+from .models import Cart, Favorite, Ingredient, Recipe, Subscription, Tag
 
 
 class TagAdmin(admin.ModelAdmin):
