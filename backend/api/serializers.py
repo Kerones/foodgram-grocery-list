@@ -179,6 +179,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         if limit:
             queryset = queryset[:int(limit)]
             return ShortRecipeSerializer(queryset, many=True).data
+        return None
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj.author).count()
