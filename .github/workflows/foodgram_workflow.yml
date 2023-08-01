@@ -64,15 +64,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-<<<<<<< HEAD
             sudo docker compose stop
-=======
-            sudo docker pull kerones/foodgram_frontend
-            sudo docker pull kerones/foodgram-project
-            sudo docker compose stop
-            sudo docker compose rm backend
-            rm .env
->>>>>>> 62c57a24c33e6d7e50d8364446f97a6bb3ca7069
             touch .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
@@ -81,24 +73,6 @@ jobs:
             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-<<<<<<< HEAD
             sudo docker compose pull
             sudo docker compose up -d
             sudo docker image prune -f
-=======
-            echo DJ_SECRET_KEY=${{ secrets.DJ_SECRET_KEY }} >> .env
-            sudo docker compose up -d
-
-  telegram_message:
-    name: Send telegram message
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - uses: actions/checkout@master
-      - name: send custom message with message
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: ${{ github.workflow }} успешно выполнен!
->>>>>>> 62c57a24c33e6d7e50d8364446f97a6bb3ca7069
