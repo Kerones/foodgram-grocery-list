@@ -8,7 +8,7 @@ services:
       - ./.env
 
   backend:
-    image: kerones/foodgram-project
+    image: kerones/foodgram_backend
     restart: always
     volumes:
       - static_value:/code/static/
