@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
 from string import hexdigits
 
 User = get_user_model()
@@ -35,7 +36,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.name[:self.NAME_LIMIT]
 
-    def hex_validator(color):
+    def hex_validator(self, color):
         color = color.strip(' #')
         if len(color) not in (3, 6):
             raise ValidationError(
