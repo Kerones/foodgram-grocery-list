@@ -1,5 +1,4 @@
-<h1 align="center"> Продуктовый помощник <a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a>
-<img src="https://github.com/goforbg/telegram-emoji-gifs/blob/master/wine-glasses.gif" height="30"/></h1>
+<h1 align="center"> Продуктовый помощник <a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a><img src="https://github.com/goforbg/telegram-emoji-gifs/blob/master/wine-glasses.gif" height="30"/></h1>
 
 <a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a>, «Продуктовый помощник». На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
