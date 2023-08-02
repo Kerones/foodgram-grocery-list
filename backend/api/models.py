@@ -1,37 +1,30 @@
-from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from string import hexdigits
 
 User = get_user_model()
 
 
 class Tag(models.Model):
     NAME_LIMIT = 15
-    COLOR_PALETTE = [
-        ('#FFFFFF', 'white', ),
-        ('#000000', 'black', ),
-        ('#0000FF', 'blue', ),
-        ('#FFA500', 'orange', ),
-        ('#008000', 'green', ),
-        ('#800080', 'purple', ),
-        ('#FFFF00', 'yellow', ),
-    ]
-
     name = models.CharField(
-        'Название',
+        verbose_name="Тег",
         max_length=200,
         unique=True,
     )
-    color = ColorField(
-        'Цвет',
-        samples=COLOR_PALETTE,
+    color = models.CharField(
+        verbose_name="Цвет",
+        max_length=7,
         unique=True,
+        db_index=False,
     )
-    slug = models.SlugField(
-        'Слаг',
-        max_length=200,
+    slug = models.CharField(
+        verbose_name="Слаг тега",
+        max_length=50,
         unique=True,
+        db_index=False,
     )
 
     class Meta:
@@ -41,6 +34,24 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name[:self.NAME_LIMIT]
+
+    def hex_validator(color):
+        color = color.strip(' #')
+        if len(color) not in (3, 6):
+            raise ValidationError(
+                f'Код цвета {color} имеет некорректную длину: ({len(color)}).'
+            )
+        if not set(color).issubset(hexdigits):
+            raise ValidationError(f'{color} не является шестнадцатиричным.')
+        if len(color) == 3:
+            return f'#{color[0] * 2}{color[1] * 2}{color[2] * 2}'.upper()
+        return '#' + color.upper()
+
+    def clean(self):
+        self.name = self.name.strip().lower()
+        self.slug = self.slug.strip().lower()
+        self.color = self.hex_validator(self.color)
+        return super().clean
 
 
 class Ingredient(models.Model):

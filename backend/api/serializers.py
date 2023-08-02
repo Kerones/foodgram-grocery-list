@@ -18,6 +18,11 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'color', 'slug')
         read_only_fields = ('id', 'name', 'color', 'slug')
 
+    def validate(self, data):
+        for attr, value in data.items():
+            data[attr] = value.sttrip(' #').upper()
+        return data
+
 
 class IngredientSerializer(serializers.ModelSerializer):
     """Сериализатор вывода ингридиентов."""
