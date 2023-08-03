@@ -1,28 +1,53 @@
 from django.contrib import admin
 
-from .models import Cart, Favorite, Ingredient, Recipe, Subscription, Tag
+from .models import Cart, Favorite, Ingredient, Recipe, Tag
+
+EMPTY = '-пусто-'
 
 
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'color')
+class IngredientsInLine(admin.TabularInline):
+    model = Recipe.ingredients.through
 
 
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'recipe']
+    search_fields = ['user__username', 'user__email']
+    empty_value_display = EMPTY
+
+
+@admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'measurement_unit')
-    list_filter = ('name',)
+    list_display = ['id', 'name', 'measurement_unit']
+    search_fields = ['name']
+    empty_value_display = EMPTY
 
 
+@admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'author', 'count_favorites')
-    list_filter = ('author', 'name', 'tags')
+    list_display = ['id', 'name', 'author', 'favorites']
+    search_fields = ['name', 'author__username']
+    list_filter = ['tags']
+    empty_value_display = EMPTY
+    inlines = (
+        IngredientsInLine,
+    )
 
-    def count_favorites(self, obj):
-        return obj.favorites.count()
+    def favorites(self, obj):
+        if Favorite.objects.filter(recipe=obj).exists():
+            return Favorite.objects.filter(recipe=obj).count()
+        return 0
 
 
-admin.site.register(Subscription)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(Cart)
-admin.site.register(Favorite)
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'recipe']
+    search_fields = ['user__username', 'user__email']
+    empty_value_display = EMPTY
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'color', 'slug']
+    search_fields = ['name', 'slug']
+    empty_value_display = EMPTY

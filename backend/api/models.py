@@ -70,6 +70,10 @@ class Ingredient(models.Model):
         ordering = ('name',)
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
+        models.UniqueConstraint(
+            fields=('name', 'measurement_unit'),
+            name='ingredient_name_unit_unique'
+        )
 
     def __str__(self):
         return self.name
@@ -93,12 +97,13 @@ class Recipe(models.Model):
     text = models.TextField('Текстовое описание')
     ingredients = models.ManyToManyField(
         Ingredient,
+        through='IngredientAmount',
         verbose_name='Ингридиенты',
         related_name='recipes',
-        through='IngredientAmount',
     )
     tags = models.ManyToManyField(
         Tag,
+        through='RecipeTag',
         verbose_name='Теги',
         related_name='recipes',
     )
@@ -116,8 +121,8 @@ class Recipe(models.Model):
             message='Время приготовления блюда не может быть меньше минуты'),
             MaxValueValidator(
             32767,
-            message='Время приготовления блюда не может быть таким долгим')
-        ))
+            message='Время приготовления блюда не может быть таким долгим'),)
+    )
 
     class Meta:
         ordering = ('-pub_date',)
@@ -145,8 +150,8 @@ class IngredientAmount(models.Model):
             1,
             message='Чтобы приготовить блюдо нужен хотя бы один ингридиент'),
             MaxValueValidator(
-            32767, message='Слишком много ингридиентов!')
-        ))
+            32767, message='Слишком много ингридиентов!'),)
+    )
 
     class Meta:
         ordering = ('-recipe',)
@@ -167,7 +172,7 @@ class CustomModel(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
                 name='unique recipe in favorites'
-            ),
+            )
         ]
 
 
@@ -188,6 +193,28 @@ class Favorite(CustomModel):
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
+
+
+class RecipeTag(models.Model):
+
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт'
+    )
+    tag = models.ForeignKey(
+        Tag,
+        on_delete=models.CASCADE,
+        verbose_name='Тег'
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'tag'],
+                name='recipe_tag_unique'
+            ),
+        ]
 
 
 class Cart(CustomModel):
@@ -228,7 +255,7 @@ class Subscription(models.Model):
         verbose_name_plural = 'Подписки'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'author'],
+                fields=('user', 'author'),
                 name='unique follow',
             )
         ]

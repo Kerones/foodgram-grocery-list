@@ -1,0 +1,8 @@
+SECRET_KEY=")u6t2$ave0d!lr=3s*#95pjtb06bnkqp$5*1&zd9t+)bjzor1j"
+ALLOWED_HOSTS='food-gramm.sytes.net, 158.160.74.28, 127.0.0.1, localhost'
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=db
+DB_PORT=5432

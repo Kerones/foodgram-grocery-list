@@ -10,7 +10,7 @@ User = get_user_model()
 class CustomUserSerializer(UserSerializer):
     """Сериализатор для модели User."""
 
-    is_subscribed = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -18,10 +18,12 @@ class CustomUserSerializer(UserSerializer):
                   'last_name', 'is_subscribed')
 
     def get_is_subscribed(self, obj):
-        user = self.context.get('request').user
-        if user.is_anonymous:
+        request = self.context.get('request')
+        if request is None or request.user.is_anonymous:
             return False
-        return Subscription.objects.filter(user=user, author=obj.id).exists()
+        return Subscription.objects.filter(
+            user=request.user, author=obj
+        ).exists()
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -36,10 +38,3 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         model = User
         fields = (
             'email', 'id', 'password', 'username', 'first_name', 'last_name')
-        extra_kwargs = {
-            'email': {'required': True},
-            'username': {'required': True},
-            'password': {'required': True},
-            'first_name': {'required': True},
-            'last_name': {'required': True},
-        }
