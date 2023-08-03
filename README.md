@@ -81,16 +81,16 @@ sudo docker-compose up -d --build
 * После успешной сборки на сервере выполните команды (только после первого деплоя):
     - Примените миграции:
     ```
-    sudo docker-compose exec backend python manage.py makemigrations
-    sudo docker-compose exec backend python manage.py migrate
+    sudo docker compose exec web python manage.py makemigrations
+    sudo docker compose exec web python manage.py migrate
     ```
     - Загрузите ингридиенты  в базу данных (необязательно):  
     *По умолчанию выбирается файл ingredients.json*
     ```
-    sudo docker-compose exec backend python manage.py load_ingredients <Название файла из директории data>
+    sudo docker compose exec web python manage.py load_ingredients <Название файла из директории data>
     ```
     - Создайте суперпользователя Django:
     ```
-    sudo docker-compose exec backend python manage.py createsuperuser
+    sudo docker compose exec web python manage.py createsuperuser
     ```
 <h3 align="center"> 👨🏼‍💻Проект подготовил <a href="https://github.com/Kerones/" target="_blank">Василий Гантимуров</a> совместно с <a href="https://github.com/yandex-praktikum/"target="_blank">Yandex Practicum</a> <img src="https://yt3.googleusercontent.com/-pnsqu0xQYwxMhUVq-HZJHf691DEhTlEl1fZvjUtUwJIKMyTqXDBVvK7d2dSjFUTYdHFpTYvAo8=s900-c-k-c0x00ffffff-no-rj" height="18"/ </h3>
