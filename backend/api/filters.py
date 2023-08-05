@@ -1,35 +1,37 @@
-from django_filters import rest_framework as filter
-from rest_framework.filters import SearchFilter
+from django_filters import rest_framework as filters
 
-from .models import Recipe, Tag
-
-
-class IngredientSearchFilter(SearchFilter):
-    search_param = 'name'
+from .models import Tag, User
 
 
-class RecipeSearchFilter(filter.FilterSet):
-    author = filter.CharFilter()
-    tags = filter.ModelMultipleChoiceFilter(
-        field_name='tags__slug',
-        queryset=Tag.objects.all(),
-        label='Tags',
-        to_field_name='slug'
+class IngredientFilter(filters.FilterSet):
+    """FilterSet для IngredientViewSet."""
+
+    name = filters.CharFilter(lookup_expr='istartswith')
+
+
+class RecipeFilter(filters.FilterSet):
+    """FilterSet для RecipeViewSet."""
+
+    author = filters.ModelChoiceFilter(
+        field_name='author_id',
+        queryset=User.objects.all(),
     )
-    is_favorited = filter.BooleanFilter(method='get_favorite')
-    is_in_shopping_cart = filter.BooleanFilter(
-        method='get_is_in_shopping_cart')
+    tags = filters.filters.ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
+        field_name='tags__slug',
+        to_field_name='slug',
+    )
+    is_favorited = filters.BooleanFilter(method='favorited_filter')
+    is_in_shopping_cart = filters.BooleanFilter(method='shoppingcart_filter')
 
-    class Meta:
-        model = Recipe
-        fields = ['tags', 'author', 'is_favorited', 'is_in_shopping_cart']
-
-    def get_favorite(self, queryset, name, value):
-        if value:
-            return queryset.filter(favorites__user=self.request.user)
+    def shoppingcart_filter(self, queryset, name, value):
+        user = self.request.user
+        if value is True and user.is_authenticated:
+            return queryset.filter(in_shoppingcart__user_id=user.id)
         return queryset
 
-    def get_is_in_shopping_cart(self, queryset, name, value):
-        if value:
-            return queryset.filter(shopping_cart__user=self.request.user)
+    def favorited_filter(self, queryset, name, value):
+        user = self.request.user
+        if value is True and user.is_authenticated:
+            return queryset.filter(in_favoriterecipe__user_id=user.id)
         return queryset
