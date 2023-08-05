@@ -1,46 +1,37 @@
-from django.urls import include, path
-from rest_framework.routers import DefaultRouter
-from users.views import CustomUserViewSet
+from django.urls import path
+from foodgram.urls import router
 
-from .views import (CartView, FavoriteView, IngredientsViewSet, RecipeViewSet,
-                    ShowSubscriptionsView, SubscribeView, TagsViewSet)
+from .views import (
+    DownloadShoppingCartView,
+    FavoriteRecipeToUserView,
+    IngredientViewSet,
+    RecipeViewSet,
+    ShoppingCartToUserView,
+    TagViewSet,
+)
+
 
 app_name = 'api'
 
-router = DefaultRouter()
+router.register('tags', TagViewSet, basename='tag')
+router.register('ingredients', IngredientViewSet, basename='ingredient')
+router.register('recipes', RecipeViewSet, basename='recipe')
 
-router.register('ingredients', IngredientsViewSet, basename='ingredients')
-router.register('recipes', RecipeViewSet, basename='recipes')
-router.register('tags', TagsViewSet, basename='tags')
-router.register('users', CustomUserViewSet)
 
 urlpatterns = [
     path(
+        'recipes/<int:recipe_id>/favorite/',
+        FavoriteRecipeToUserView.as_view(),
+        name='favorite_recipe',
+    ),
+    path(
+        'recipes/<int:recipe_id>/shopping_cart/',
+        ShoppingCartToUserView.as_view(),
+        name='shopping_cart',
+    ),
+    path(
         'recipes/download_shopping_cart/',
-        CartView.download_shopping_cart,
-        name='download_shopping_cart'
+        DownloadShoppingCartView.as_view(),
+        name='download_shopping_cart',
     ),
-    path(
-        'recipes/<int:id>/shopping_cart/',
-        CartView.as_view(),
-        name='shopping_cart'
-    ),
-    path(
-        'recipes/<int:id>/favorite/',
-        FavoriteView.as_view(),
-        name='favorite'
-    ),
-    path(
-        'users/<int:id>/subscribe/',
-        SubscribeView.as_view(),
-        name='subscribe'
-    ),
-    path(
-        'users/subscriptions/',
-        ShowSubscriptionsView.as_view(),
-        name='subscriptions'
-    ),
-    path('auth/', include('djoser.urls.authtoken')),
-    path('', include('djoser.urls')),
-    path('', include(router.urls)),
 ]
