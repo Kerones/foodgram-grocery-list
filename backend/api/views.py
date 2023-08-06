@@ -28,7 +28,11 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для модели ингридиентов."""
 
     serializer_class = IngredientSerializer
+<<<<<<< HEAD
     queryset = Ingredient.objects.all()
+=======
+    queryset = Ingredient.objects.select_related('measurement_unit')
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
     permission_classes = (permissions.AllowAny,)
     filterset_class = IngredientFilter
 
@@ -41,6 +45,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly & IsOwnerOrReadOnly,)
     pagination_class = PageNumberLimitPagination
     filterset_class = RecipeFilter
+<<<<<<< HEAD
+=======
+
+    def get_queryset(self):
+        return Recipe.objects.setup_eager_loading(self.request.user)
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
 
 
 class FavoriteRecipeToUserView(BaseRecipeToUserView):
@@ -88,7 +98,11 @@ class DownloadShoppingCartView(views.APIView):
 
     def create_simple_ingredient_list(self, ingredients_qs):
         simple_ingredient_list = [
+<<<<<<< HEAD
             f"{obj.name} ({obj.measurement_unit}) — {obj.amount}"
+=======
+            f"{obj.name} ({obj.measurement_unit.name}) — {obj.amount}"
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
             for obj in ingredients_qs
         ]
         return simple_ingredient_list

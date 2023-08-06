@@ -4,7 +4,11 @@ from django.db import models
 from users.models import BaseModel
 
 from .fields import HEXColorField
+<<<<<<< HEAD
 # from .managers import RecipeManager
+=======
+from .managers import RecipeManager
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
 
 User = get_user_model()
 
@@ -23,6 +27,7 @@ class Tag(models.Model):
         return self.name
 
 
+<<<<<<< HEAD
 # class MeasurementUnit(models.Model):
 #     """Модель единиц измерения ингридиента."""
 
@@ -30,14 +35,30 @@ class Tag(models.Model):
 
 #     def __str__(self):
 #         return self.name
+=======
+class MeasurementUnit(models.Model):
+    """Модель единиц измерения ингридиента."""
+
+    name = models.CharField(unique=True, max_length=30)
+
+    def __str__(self):
+        return self.name
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
 
 
 class Ingredient(models.Model):
     """Модель ингридиента."""
 
     name = models.CharField(db_index=True, max_length=200)
+<<<<<<< HEAD
     measurement_unit = models.CharField(max_length=200,
                                         verbose_name='Единица измерения')
+=======
+    measurement_unit = models.ForeignKey(
+        MeasurementUnit,
+        on_delete=models.PROTECT,
+    )
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
 
     class Meta:
         ordering = ('name',)
@@ -76,7 +97,11 @@ class Recipe(BaseModel):
         validators=[MinValueValidator(1)],
     )
 
+<<<<<<< HEAD
     # objects = RecipeManager()
+=======
+    objects = RecipeManager()
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
 
     class Meta:
         ordering = ('-created_at',)
