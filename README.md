@@ -84,10 +84,10 @@ sudo docker-compose up -d --build
     sudo docker compose exec web python manage.py makemigrations
     sudo docker compose exec web python manage.py migrate
     ```
-    - Загрузите ингридиенты  в базу данных (необязательно):  
-    *По умолчанию выбирается файл ingredients.json*
+    - Загрузите подготовленные ингриденты и теги в базу данных (необязательно):  
     ```
-    sudo docker compose exec web python manage.py load_ingredients <Название файла из директории data>
+    sudo docker-compose exec backend python manage.py loadmodels --path 'recipes/data/ingredients.json'
+    sudo docker-compose exec backend python manage.py loadmodels --path 'recipes/data/tags.json'
     ```
     - Создайте суперпользователя Django:
     ```
