@@ -4,7 +4,11 @@ from django.db.models import Count
 from .models import (
     FavoriteRecipe,
     Ingredient,
+<<<<<<< HEAD
     # MeasurementUnit,
+=======
+    MeasurementUnit,
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
     Recipe,
     RecipeIngredient,
     RecipeTag,
@@ -20,11 +24,19 @@ class TagAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
 
 
+<<<<<<< HEAD
 # @admin.register(MeasurementUnit)
 # class MeasurementUnitAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'name')
 #     search_fields = ('^name',)
 #     list_display_links = ('name',)
+=======
+@admin.register(MeasurementUnit)
+class MeasurementUnitAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+    search_fields = ('^name',)
+    list_display_links = ('name',)
+>>>>>>> e8d60c4fededb0deb138734d42bf4c9a50ed4a98
 
 
 @admin.register(Ingredient)
