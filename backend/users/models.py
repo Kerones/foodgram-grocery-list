@@ -1,66 +1,53 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.db.models import UniqueConstraint
 
-from .managers import UserManager
-
-
-class BaseModel(models.Model):
-    """Базовая модель с полями даты создания и обновления."""
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
+from .validators import validate_username
 
 
 class User(AbstractUser):
-    """Модель пользователя."""
+    """ Кастомная модель пользователя. """
 
-    first_name = models.CharField(_('first name'), max_length=150)
-    last_name = models.CharField(_('last name'), max_length=150)
-    email = models.EmailField(_('email address'), unique=True)
-
+    email = models.EmailField('Почта', max_length=254, unique=True)
+    first_name = models.CharField('Имя', max_length=150, blank=False)
+    last_name = models.CharField('Фамилия', max_length=150, blank=False)
+    username = models.CharField(
+        'Юзернейм',
+        max_length=150,
+        validators=(validate_username,))
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
-
-    objects = UserManager()
-
-    class Meta(AbstractUser.Meta):
-        db_table = 'auth_user'
-        ordering = ('-date_joined',)
-
-
-class Follow(BaseModel):
-    """Модель подписки."""
-
-    follower = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='follower',
-        verbose_name='follower',
-    )
-    follow_to = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='follow_to',
-        verbose_name='follow to',
-    )
-    updated_at = None
+    REQUIRED_FIELDS = ('username', 'first_name', 'last_name')
 
     class Meta:
-        ordering = ('-created_at',)
-        constraints = [
-            models.UniqueConstraint(
-                fields=['follower', 'follow_to'],
-                name='unique_follow',
-            ),
-        ]
+        ordering = ('-pk',)
 
-    def clean(self):
-        if self.follower == self.follow_to:
-            raise ValidationError(
-                {'follow_to': 'You cannot follow to yourself.'}
-            )
+    def __str__(self):
+        return self.username
+
+
+class Subscription(models.Model):
+    """ Модель подписок. """
+
+    user = models.ForeignKey(
+        User,
+        related_name='follower',
+        on_delete=models.CASCADE,
+        verbose_name='Подписчик'
+    )
+    author = models.ForeignKey(
+        User,
+        related_name='author',
+        on_delete=models.CASCADE,
+        verbose_name='Автор'
+    )
+
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('user', 'author'),
+                name='user_author_unique'
+            ),
+        )
+
+    def __str__(self):
+        return f'Пользователь {self.user} подписался на {self.author}'
