@@ -36,6 +36,8 @@ class Tag(models.Model):
 
     class Meta:
         ordering = ('name',)
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
     def __str__(self):
         return self.name
@@ -89,29 +91,6 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    def _get_old_image(self):
-        if self.pk is None:
-            return None
-        try:
-            return self.__class__.objects.get(pk=self.pk).image
-        except self.__class__.DoesNotExist:
-            return None
-
-    def save(self, *args, **kwargs):
-        old_image = self._get_old_image()
-        save_result = super().save(*args, **kwargs)
-        if old_image is not None and old_image != self.image:
-            old_image.delete(save=False)
-        return save_result
-
-    def delete(self, *args, **kwargs):
-        delete_result = super().delete(*args, **kwargs)
-        self.image.delete(save=False)
-        return delete_result
-
-
-class RecipeTag(models.Model):
-    """Связующая модель рецептов с тегами."""
 
 class RecipeIngredient(models.Model):
     """ Модель связи ингредиента и рецепта. """
