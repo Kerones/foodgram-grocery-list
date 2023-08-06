@@ -30,7 +30,7 @@ sudo apt install docker.io
 * Установите docker-compose на сервер:
 ```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker compose
 ```
 * Локально отредактируйте файл infra/nginx.conf, вписав в строку server_name свой IP
 * Скопируйте файлы docker-compose.yml и nginx.conf из директории infra на сервер:
@@ -76,7 +76,7 @@ scp nginx.conf <username>@<host>:/home/<username>/nginx.conf
   
 * На сервере соберите docker-compose:
 ```
-sudo docker-compose up -d --build
+sudo docker compose up -d --build
 ```
 * После успешной сборки на сервере выполните команды (только после первого деплоя):
     - Примените миграции:
@@ -86,11 +86,12 @@ sudo docker-compose up -d --build
     ```
     - Загрузите подготовленные ингриденты и теги в базу данных (необязательно):  
     ```
-    sudo docker-compose exec backend python manage.py loadmodels --path 'recipes/data/ingredients.json'
-    sudo docker-compose exec backend python manage.py loadmodels --path 'recipes/data/tags.json'
+    sudo docker compose exec backend python manage.py load_models --path 'api/data/ingredients.json'
+    sudo docker compose exec backend python manage.py load_models --path 'api/data/tags.json'
     ```
-    - Создайте суперпользователя Django:
+    5. Создайте django суперюзера и соберите статику:
     ```
-    sudo docker compose exec web python manage.py createsuperuser
+    sudo docker compose exec backend python manage.py createsuperuser
+    sudo docker compose exec backend python manage.py collectstatic --no-input
     ```
 <h3 align="center"> 👨🏼‍💻Проект подготовил <a href="https://github.com/Kerones/" target="_blank">Василий Гантимуров</a> совместно с <a href="https://github.com/yandex-praktikum/"target="_blank">Yandex Practicum</a> <img src="https://yt3.googleusercontent.com/-pnsqu0xQYwxMhUVq-HZJHf691DEhTlEl1fZvjUtUwJIKMyTqXDBVvK7d2dSjFUTYdHFpTYvAo8=s900-c-k-c0x00ffffff-no-rj" height="18"/ </h3>
