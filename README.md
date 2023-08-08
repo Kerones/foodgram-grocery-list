@@ -81,8 +81,8 @@ sudo docker compose up -d --build
 * После успешной сборки на сервере выполните команды (только после первого деплоя):
     - Примените миграции:
     ```
-    sudo docker compose exec web python manage.py makemigrations
-    sudo docker compose exec web python manage.py migrate
+    sudo docker compose exec backend python manage.py makemigrations
+    sudo docker compose exec backend python manage.py migrate
     ```
     - Загрузите подготовленные ингриденты и теги в базу данных (необязательно):  
     ```
