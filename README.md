@@ -17,7 +17,7 @@
 ```
 git clone https://github.com/Kerones/foodgram-project-react
 ```
-## Для рабоыт с удаленным сервером (на ubuntu):
+## Для работы с удаленным сервером (на ubuntu):
 * Выполните вход на удаленный сервер
 * Установите docker на сервер:
 ```
@@ -64,8 +64,8 @@ sudo docker compose -f docker-compose.production.yml up -d --build
 * Выполните следующие команды (только после первого деплоя):
     - Примените миграции:
     ```
-    sudo docker compose exec backend python manage.py makemigrations
-    sudo docker compose exec backend python manage.py migrate
+    sudo docker compose -f docker-compose.production.yml exec backend python manage.py makemigrations
+    sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
     ```
     - Загрузите подготовленные ингридиенты и теги в базу данных:
     ```
