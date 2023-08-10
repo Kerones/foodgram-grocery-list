@@ -1,6 +1,6 @@
 <h1 align="center"> Продуктовый помощник <a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a></h1>
 
-<a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a> , "Продуктовый помощник". На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понаврившиеся рецепты в список "Избранное", а перед походом в магазин скачать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
+<a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a>, "Продуктовый помощник". На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понаврившиеся рецепты в список "Избранное", а перед походом в магазин скачать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat-square&logo=Django)](https://www.djangoproject.com/)
@@ -72,9 +72,8 @@ sudo docker compose -f docker-compose.production.yml up -d --build
     sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_models --path 'api/data/ingredients.json'
     sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_models --path 'api/data/tags.json'
     ```
-    - Создайте суперпользователя Django и соберите статику:
+    - Создайте суперпользователя Django:
     ```
     sudo docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
-    sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
     ```      
-<h3 align="center"> 👨🏼‍💻Проект подготовил <a href="https://github.com/Kerones/" target="_blank">Василий Гантимуров</a> совместно с<a href="https://github.com/yandex-praktikum/"target="_blank">Yandex Practicum</a> <img src="https://yt3.googleusercontent.com/-pnsqu0xQYwxMhUVq-HZJHf691DEhTlEl1fZvjUtUwJIKMyTqXDBVvK7d2dSjFUTYdHFpTYvAo8=s900-c-k-c0x00ffffff-no-rj" height="18"</h3>
+<h3 align="center"> 👨🏼‍💻Проект подготовил <a href="https://github.com/Kerones/" target="_blank">Василий Гантимуров</a> совместно с <a href="https://github.com/yandex-praktikum/"target="_blank">Yandex Practicum</a> <img src="https://yt3.googleusercontent.com/-pnsqu0xQYwxMhUVq-HZJHf691DEhTlEl1fZvjUtUwJIKMyTqXDBVvK7d2dSjFUTYdHFpTYvAo8=s900-c-k-c0x00ffffff-no-rj" height="18"</h3>
