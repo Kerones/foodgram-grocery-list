@@ -133,4 +133,5 @@ dmypy.json
 
 media/
 static/
-backend/migrations/
+backend/api/migrations/
+backend/users/migrations/
