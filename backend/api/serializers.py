@@ -159,10 +159,16 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
+        name = self.initial_data.get('name')
+        author = self.initial_data.get('author')
+        if Recipe.objects.filter(author=author, name=name).exists():
+            raise serializers.ValidationError({
+                    'name': 'Такой рецепт уже Вами добавлен'
+                })
         ingredients = self.initial_data.get('ingredients')
         list = []
-        for i in ingredients:
-            amount = i['amount']
+        for ingredient in ingredients:
+            amount = ingredient['amount']
             if int(amount) < 1:
                 raise serializers.ValidationError({
                     'amount': 'Количество ингредиента должно быть больше 0'
@@ -171,11 +177,11 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'amount': 'Введено слишком большое количество'
                 })
-            if i['id'] in list:
+            if ingredient['id'] in list:
                 raise serializers.ValidationError({
                     'ingredient': 'Ингредиенты должны быть уникальными'
                 })
-            list.append(i['id'])
+            list.append(ingredient['id'])
         return data
 
     def create_ingredients(self, ingredients, recipe):

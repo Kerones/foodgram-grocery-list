@@ -10,6 +10,7 @@ class IngredientsInLine(admin.TabularInline):
     min_num = 1
     extra = 2
 
+
 class TagsInLine(admin.TabularInline):
     model = Recipe.tags.through
     min_num = 1
