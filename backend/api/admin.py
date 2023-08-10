@@ -8,8 +8,10 @@ EMPTY = '-пусто-'
 class IngredientsInLine(admin.TabularInline):
     model = Recipe.ingredients.through
 
+
 class TagsInLine(admin.TabularInline):
     model = Recipe.tags.through
+
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
