@@ -6,6 +6,8 @@ from django.db.models import UniqueConstraint
 
 User = get_user_model()
 
+MAX_NAME_SIZE = 20
+
 
 class Ingredient(models.Model):
     """ Модель ингредиента. """
@@ -27,17 +29,16 @@ class Ingredient(models.Model):
             ),
         )
 
+    def __str__(self):
+        return self.name[:MAX_NAME_SIZE]
+
 
 class Tag(models.Model):
     """ Модель тега. """
 
     name = models.CharField('Название тега', unique=True, max_length=200)
-    # color = models.CharField('Цвет', unique=True, max_length=7)
-    color = ColorField(
-        'Цвет',
-        unique=True,
-        format='hex'
-    )
+    color = models.CharField('Цвет', unique=True, max_length=7)
+    # color = ColorField('Цвет', unique=True, format='hex')
     slug = models.SlugField('Slug', unique=True, max_length=200)
 
     class Meta:
@@ -46,7 +47,7 @@ class Tag(models.Model):
         verbose_name_plural = 'Теги'
 
     def __str__(self):
-        return self.name
+        return self.name[:MAX_NAME_SIZE]
 
 
 class Recipe(models.Model):
@@ -95,7 +96,7 @@ class Recipe(models.Model):
         ordering = ('-pub_date',)
 
     def __str__(self):
-        return self.name
+        return self.name[:MAX_NAME_SIZE]
 
 
 class RecipeIngredient(models.Model):
@@ -174,6 +175,9 @@ class ShoppingCart(models.Model):
             ),
         )
 
+    def __str__(self):
+        return f'Корзина пользователя {self.user}'
+
 
 class Favorite(models.Model):
     """ Модель избранного. """
@@ -200,3 +204,6 @@ class Favorite(models.Model):
                 name='user_favorite_unique'
             ),
         )
+
+    def __str__(self):
+        return f'Избранное пользователя {self.user}'

@@ -8,6 +8,8 @@ EMPTY = '-пусто-'
 class IngredientsInLine(admin.TabularInline):
     model = Recipe.ingredients.through
 
+class TagsInLine(admin.TabularInline):
+    model = Recipe.tags.through
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
@@ -31,6 +33,7 @@ class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = EMPTY
     inlines = (
         IngredientsInLine,
+        TagsInLine,
     )
 
     def favorites(self, obj):
