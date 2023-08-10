@@ -9,6 +9,7 @@ class SubscriptonAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'author__username')
     empty_value_display = '-пусто-'
 
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'email', 'username', 'first_name', 'last_name')

@@ -13,13 +13,13 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
     class Meta:
         model = User
-        fields = [
+        fields = (
             'email',
             'username',
             'first_name',
             'last_name',
             'password'
-        ]
+        )
 
 
 class CustomUserSerializer(UserSerializer):
@@ -29,14 +29,14 @@ class CustomUserSerializer(UserSerializer):
 
     class Meta:
         model = User
-        fields = [
+        fields = (
             'id',
             'email',
             'username',
             'first_name',
             'last_name',
             'is_subscribed'
-        ]
+        )
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
@@ -52,7 +52,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ['id', 'name', 'color', 'slug']
+        fields = ('id', 'name', 'color', 'slug')
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeIngredient
-        fields = ['id', 'name', 'amount', 'measurement_unit']
+        fields = ('id', 'name', 'amount', 'measurement_unit')
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -74,7 +74,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ['id', 'name', 'measurement_unit']
+        fields = ('id', 'name', 'measurement_unit')
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -90,7 +90,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = [
+        fields = (
             'id',
             'tags',
             'author',
@@ -101,7 +101,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'image',
             'text',
             'cooking_time'
-        ]
+        )
 
     def get_ingredients(self, obj):
         ingredients = RecipeIngredient.objects.filter(recipe=obj)
@@ -132,7 +132,7 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeIngredient
-        fields = ['id', 'amount']
+        fields = ('id', 'amount')
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
@@ -147,7 +147,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = [
+        fields = (
             'id',
             'author',
             'ingredients',
@@ -156,7 +156,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             'name',
             'text',
             'cooking_time'
-        ]
+        )
 
     def validate(self, data):
         ingredients = self.initial_data.get('ingredients')
@@ -230,7 +230,7 @@ class ShowFavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ['id', 'name', 'image', 'cooking_time']
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
@@ -238,7 +238,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingCart
-        fields = ['user', 'recipe']
+        fields = ('user', 'recipe')
 
     def to_representation(self, instance):
         return ShowFavoriteSerializer(instance.recipe, context={
@@ -251,7 +251,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Favorite
-        fields = ['user', 'recipe']
+        fields = ('user', 'recipe')
 
     def to_representation(self, instance):
         return ShowFavoriteSerializer(instance.recipe, context={
@@ -268,7 +268,7 @@ class ShowSubscriptionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
+        fields = (
             'id',
             'email',
             'username',
@@ -277,7 +277,7 @@ class ShowSubscriptionsSerializer(serializers.ModelSerializer):
             'is_subscribed',
             'recipes',
             'recipes_count'
-        ]
+        )
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
@@ -306,11 +306,11 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subscription
-        fields = ['user', 'author']
+        fields = ('user', 'author')
         validators = [
             UniqueTogetherValidator(
                 queryset=Subscription.objects.all(),
-                fields=['user', 'author'],
+                fields=('user', 'author'),
             )
         ]
 
