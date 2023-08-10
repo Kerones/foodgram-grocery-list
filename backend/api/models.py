@@ -1,6 +1,6 @@
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 
@@ -78,11 +78,16 @@ class Recipe(models.Model):
         'Описание рецепта',
         help_text='Введите описание рецепта'
     )
-    cooking_time = models.PositiveIntegerField(
-        verbose_name='Время приготовления',
+    cooking_time = models.PositiveSmallIntegerField(
+        'Время приготовления',
+        default=1,
         validators=(MinValueValidator(
-            1, message='Время приготовления должно быть не менее 1 минуты!'
-        ),)
+            1,
+            message='Время приготовления блюда не может быть меньше минуты'),
+            MaxValueValidator(
+            32767,
+            message='Время приготовления блюда не может быть таким долгим')
+        )
     )
     pub_date = models.DateTimeField(
         'Время публикации',
@@ -111,9 +116,15 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Ингредиент'
     )
-    amount = models.IntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество',
-        validators=(MinValueValidator(1),)
+        validators=(MinValueValidator(
+            1,
+            message='Количество ингредиента должно быть больше 0'),
+            MaxValueValidator(
+            32767,
+            message='Введено слишком большое количество')
+        )
     )
 
     class Meta:

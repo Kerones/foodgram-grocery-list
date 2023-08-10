@@ -7,10 +7,13 @@ EMPTY = '-пусто-'
 
 class IngredientsInLine(admin.TabularInline):
     model = Recipe.ingredients.through
-
+    min_num = 1
+    extra = 2
 
 class TagsInLine(admin.TabularInline):
     model = Recipe.tags.through
+    min_num = 1
+    extra = 0
 
 
 @admin.register(Favorite)
