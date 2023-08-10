@@ -5,9 +5,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-secret-key')
 
-DEBUG = True
+DEBUG = False
 
-USE_SQLITE = True
+USE_SQLITE = False
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1, localhost').split(', ')
 
