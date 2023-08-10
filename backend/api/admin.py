@@ -25,9 +25,9 @@ class IngredientAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'author', 'favorites']
-    search_fields = ['name', 'author__username']
-    list_filter = ['tags']
+    list_display = ('id', 'name', 'author', 'favorites')
+    search_fields = ('name', 'author__username')
+    list_filter = ('tags',)
     empty_value_display = EMPTY
     inlines = (
         IngredientsInLine,

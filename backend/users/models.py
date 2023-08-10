@@ -8,7 +8,7 @@ from .validators import validate_username
 class User(AbstractUser):
     """ Кастомная модель пользователя. """
 
-    email = models.EmailField('Почта', max_length=254, unique=True)
+    email = models.EmailField('Электронная почта', max_length=254, unique=True)
     first_name = models.CharField('Имя', max_length=150, blank=False)
     last_name = models.CharField('Фамилия', max_length=150, blank=False)
     username = models.CharField(
@@ -19,7 +19,9 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ('username', 'first_name', 'last_name')
 
     class Meta:
-        ordering = ('-pk',)
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ('-username',)
 
     def __str__(self):
         return self.username
@@ -42,6 +44,8 @@ class Subscription(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
         constraints = (
             UniqueConstraint(
                 fields=('user', 'author'),
