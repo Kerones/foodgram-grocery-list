@@ -1,8 +1,6 @@
-from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
-from django.db.models import UniqueConstraint
 
 User = get_user_model()
 
@@ -23,7 +21,7 @@ class Ingredient(models.Model):
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         constraints = (
-            UniqueConstraint(
+            models.UniqueConstraint(
                 fields=('name', 'measurement_unit'),
                 name='ingredient_name_unit_unique'
             ),
@@ -37,13 +35,22 @@ class Tag(models.Model):
     """ Модель тега. """
 
     name = models.CharField('Название тега', unique=True, max_length=200)
-    color = ColorField('Цвет', unique=True, format='hex')
+    color = models.CharField('Цвет', unique=True, max_length=7, validators=[
+        RegexValidator(
+            regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+            message='Введенное значение не является цветом в формате HEX!'
+        )
+    ])
     slug = models.SlugField('Slug', unique=True, max_length=200)
 
     class Meta:
         ordering = ('name',)
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
+
+    def save(self, force_insert=False, force_update=False):
+        self.color = self.color.upper()
+        super(Tag, self).save(force_insert, force_update)
 
     def __str__(self):
         return self.name[:MAX_NAME_SIZE]
@@ -99,7 +106,7 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
         constraints = (
-            UniqueConstraint(
+            models.UniqueConstraint(
                 fields=('name', 'author'),
                 name='unique_recipe'
             ),
@@ -135,7 +142,7 @@ class RecipeIngredient(models.Model):
 
     class Meta:
         constraints = (
-            UniqueConstraint(
+            models.UniqueConstraint(
                 fields=('recipe', 'ingredient'),
                 name='recipe_ingredient_unique'
             ),
@@ -158,7 +165,7 @@ class RecipeTag(models.Model):
 
     class Meta:
         constraints = (
-            UniqueConstraint(
+            models.UniqueConstraint(
                 fields=('recipe', 'tag'),
                 name='recipe_tag_unique'
             ),
@@ -185,7 +192,7 @@ class ShoppingCart(models.Model):
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'
         constraints = (
-            UniqueConstraint(
+            models.UniqueConstraint(
                 fields=('user', 'recipe'),
                 name='user_shoppingcart_unique'
             ),
@@ -215,7 +222,7 @@ class Favorite(models.Model):
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
         constraints = (
-            UniqueConstraint(
+            models.UniqueConstraint(
                 fields=('user', 'recipe'),
                 name='user_favorite_unique'
             ),
