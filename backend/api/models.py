@@ -36,7 +36,7 @@ class Tag(models.Model):
     """ Модель тега. """
 
     name = models.CharField('Название тега', unique=True, max_length=200)
-    color = models.CharField('Цвет', unique=True, max_length=7, validators=[
+    color = models.CharField('Цвет', unique=False, max_length=7, validators=[
         RegexValidator(
             regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
             message='Введенное значение не является цветом в формате HEX!')])
@@ -104,12 +104,6 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
-        constraints = (
-            models.UniqueConstraint(
-                fields=('name', 'author'),
-                name='unique_recipe'
-            ),
-        )
 
     def __str__(self):
         return self.name[:MAX_NAME_SIZE]

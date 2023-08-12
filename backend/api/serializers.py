@@ -54,6 +54,14 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('id', 'name', 'color', 'slug')
 
+    def validate(self, data):
+        color = self.initial_data.get('color')
+        if Tag.objects.filter(color=color).exists():
+            raise serializers.ValidationError({
+                'name': 'Цвет уже занят другим тегом'
+            })
+        return data
+
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     """ Сериализатор модели, связывающей ингредиенты и рецепт. """
