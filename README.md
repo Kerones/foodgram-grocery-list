@@ -67,10 +67,9 @@ sudo docker compose -f docker-compose.production.yml up -d --build
     sudo docker compose -f docker-compose.production.yml exec backend python manage.py makemigrations
     sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
     ```
-    - Загрузите подготовленные ингридиенты и теги в базу данных:
+    - Загрузите подготовленные ингридиенты в базу данных:
     ```
-    sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_models --path 'api/data/ingredients.json'
-    sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_models --path 'api/data/tags.json'
+    sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_models
     ```
     - Создайте суперпользователя Django:
     ```

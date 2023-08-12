@@ -1,7 +1,7 @@
-from django.core.exceptions import ValidationError
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 from users.models import Subscription, User
 
@@ -169,20 +169,23 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         name = self.initial_data.get('name')
         author = self.initial_data.get('author')
         if Recipe.objects.filter(author=author, name=name).exists():
-            raise ValidationError('Такой рецепт Вами уже добавлен')
+            raise ValidationError({'name': 'Такой рецепт Вами уже добавлен'})
         ingredients = self.initial_data.get('ingredients')
         list = []
         for ingredient in ingredients:
             amount = ingredient['amount']
             if int(amount) < 1:
-                raise serializers.ValidationError(
-                    'Количество ингредиента должно быть больше 0')
+                raise ValidationError({
+                    'amount': 'Количество ингредиента должно быть больше 0'
+                })
             if int(amount) > 32767:
-                raise serializers.ValidationError(
-                    'Введено слишком большое количество')
+                raise ValidationError({
+                    'amount': 'Введено слишком большое количество'
+                })
             if ingredient['id'] in list:
-                raise serializers.ValidationError(
-                    'Ингредиенты должны быть уникальными')
+                raise ValidationError({
+                    'ingredients': 'Ингредиенты должны быть уникальными'
+                })
             list.append(ingredient['id'])
         return data
 
