@@ -57,9 +57,7 @@ class TagSerializer(serializers.ModelSerializer):
     def validate(self, data):
         color = self.initial_data.get('color')
         if Tag.objects.filter(color=color).exists():
-            raise serializers.ValidationError({
-                'name': 'Цвет уже занят другим тегом'
-            })
+            raise serializers.ValidationError('Цвет уже занят другим тегом')
         return data
 
 
@@ -170,25 +168,20 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         name = self.initial_data.get('name')
         author = self.initial_data.get('author')
         if Recipe.objects.filter(author=author, name=name).exists():
-            raise serializers.ValidationError({
-                'name': 'Такой рецепт уже Вами добавлен'
-            })
+            raise serializers.ValidationError('Такой рецепт уже Вами добавлен')
         ingredients = self.initial_data.get('ingredients')
         list = []
         for ingredient in ingredients:
             amount = ingredient['amount']
             if int(amount) < 1:
-                raise serializers.ValidationError({
-                    'amount': 'Количество ингредиента должно быть больше 0'
-                })
+                raise serializers.ValidationError(
+                    'Количество ингредиента должно быть больше 0')
             if int(amount) > 32767:
-                raise serializers.ValidationError({
-                    'amount': 'Введено слишком большое количество'
-                })
+                raise serializers.ValidationError(
+                    'Введено слишком большое количество')
             if ingredient['id'] in list:
-                raise serializers.ValidationError({
-                    'ingredient': 'Ингредиенты должны быть уникальными'
-                })
+                raise serializers.ValidationError(
+                    'Ингредиенты должны быть уникальными')
             list.append(ingredient['id'])
         return data
 

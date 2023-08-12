@@ -41,13 +41,20 @@ class Tag(models.Model):
             regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
             message='Введенное значение не является цветом в формате HEX!')])
     slug = models.SlugField('Slug', unique=True, max_length=200)
+    is_cleaned = False
 
     class Meta:
         ordering = ('name',)
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
+    def clean(self):
+        if Tag.objects.filter(color=self.color).exists():
+            self.is_cleaned = True
+
     def save(self, force_insert=False, force_update=False):
+        if not self.is_cleaned:
+            self.clean()
         self.color = self.color.upper()
         super(Tag, self).save(force_insert, force_update)
 
