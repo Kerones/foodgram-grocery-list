@@ -4,7 +4,6 @@ from django.core.validators import (MaxValueValidator, MinValueValidator,
                                     RegexValidator)
 from django.db import models
 
-
 User = get_user_model()
 
 MAX_NAME_SIZE = 20
