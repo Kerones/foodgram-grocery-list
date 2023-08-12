@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.validators import (MaxValueValidator, MinValueValidator,
                                     RegexValidator)
 from django.db import models
+
 
 User = get_user_model()
 
@@ -41,22 +43,21 @@ class Tag(models.Model):
             regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
             message='Введенное значение не является цветом в формате HEX!')])
     slug = models.SlugField('Slug', unique=True, max_length=200)
-    is_cleaned = False
 
     class Meta:
         ordering = ('name',)
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
-    def clean(self):
-        if Tag.objects.filter(color=self.color).exists():
-            self.is_cleaned = True
+    def validate_color(self, color):
+        color = color.upper()
+        if Tag.objects.filter(color=color).exists():
+            raise ValidationError('Цвет уже используется другим тегом')
+        return color
 
-    def save(self, force_insert=False, force_update=False):
-        if not self.is_cleaned:
-            self.clean()
-        self.color = self.color.upper()
-        super(Tag, self).save(force_insert, force_update)
+    def clean(self):
+        self.color = self.validate_color(self.color)
+        return super().clean()
 
     def __str__(self):
         return self.name[:MAX_NAME_SIZE]
@@ -111,6 +112,15 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
+
+    def validate_name(self, author, name):
+        if Recipe.objects.filter(author=author, name=name).exists():
+            raise ValidationError('Такой рецепт Вами уже добавлен')
+        return name
+
+    def clean(self):
+        self.name = self.validate_name(self.author, self.name)
+        return super().clean()
 
     def __str__(self):
         return self.name[:MAX_NAME_SIZE]

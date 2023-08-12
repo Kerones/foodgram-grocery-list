@@ -168,7 +168,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         name = self.initial_data.get('name')
         author = self.initial_data.get('author')
         if Recipe.objects.filter(author=author, name=name).exists():
-            raise serializers.ValidationError('Такой рецепт уже Вами добавлен')
+            raise serializers.ValidationError('Такой рецепт Вами уже добавлен')
         ingredients = self.initial_data.get('ingredients')
         list = []
         for ingredient in ingredients:

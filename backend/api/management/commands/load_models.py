@@ -1,34 +1,35 @@
 import json
+import os
 
-from api.models import Ingredient, Tag
-from django.core.management.base import BaseCommand
+from api.models import Ingredient
+from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
+from django.db.utils import IntegrityError
+
+DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
 
 
 class Command(BaseCommand):
+    help = 'loading ingredients from data in json'
 
     def add_arguments(self, parser):
-        parser.add_argument("--path", type=str, help="file path")
+        parser.add_argument('filename', default='ingredients.json', nargs='?',
+                            type=str)
 
     def handle(self, *args, **options):
-        file_path = options["path"]
+        try:
+            with open(os.path.join(DATA_ROOT, options['filename']), 'r',
+                      encoding='utf-8') as f:
+                data = json.load(f)
+                for ingredient in data:
+                    try:
+                        Ingredient.objects.create(name=ingredient["name"],
+                                                  measurement_unit=ingredient[
+                                                      "measurement_unit"])
+                    except IntegrityError:
+                        print(f'Ингридиет {ingredient["name"]} '
+                              f'{ingredient["measurement_unit"]} '
+                              f'уже есть в базе')
 
-        with open(file_path, encoding='utf-8') as f:
-            jsondata = json.load(f)
-            if 'color' in jsondata[0]:
-                for line in jsondata:
-                    if not Tag.objects.filter(
-                       slug=line['slug']).exists():
-                        Tag.objects.create(
-                            name=line['name'],
-                            color=line['color'],
-                            slug=line['slug'],
-                        )
-            elif 'measurement_unit' in jsondata[0]:
-                for line in jsondata:
-                    if not Ingredient.objects.filter(
-                       name=line['name'],
-                       measurement_unit=line['measurement_unit']).exists():
-                        Ingredient.objects.create(
-                            name=line['name'],
-                            measurement_unit=line['measurement_unit']
-                        )
+        except FileNotFoundError:
+            raise CommandError('Файл отсутствует в директории data')
