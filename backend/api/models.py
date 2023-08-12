@@ -111,6 +111,11 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
+        constraints = (
+            models.UniqueConstraint(
+                fields=("name", "author"),
+                name="unique_for_author",
+            ),)
 
     def validate_name(self, author, name):
         if Recipe.objects.filter(author=author, name=name).exists():

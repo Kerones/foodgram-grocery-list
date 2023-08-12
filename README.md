@@ -1,6 +1,6 @@
-<h1 align="center"> Продуктовый помощник <a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a></h1>
+<h1 align="center"> РџСЂРѕРґСѓРєС‚РѕРІС‹Р№ РїРѕРјРѕС‰РЅРёРє <a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a></h1>
 
-<a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a>, "Продуктовый помощник". На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понаврившиеся рецепты в список "Избранное", а перед походом в магазин скачать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
+<a href="http://food-gramm.sytes.net/" target="_blank">Foodgram</a>, "РџСЂРѕРґСѓРєС‚РѕРІС‹Р№ РїРѕРјРѕС‰РЅРёРє". РќР° СЌС‚РѕРј СЃРµСЂРІРёСЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё РјРѕРіСѓС‚ РїСѓР±Р»РёРєРѕРІР°С‚СЊ СЂРµС†РµРїС‚С‹, РїРѕРґРїРёСЃС‹РІР°С‚СЊСЃСЏ РЅР° РїСѓР±Р»РёРєР°С†РёРё РґСЂСѓРіРёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№, РґРѕР±Р°РІР»СЏС‚СЊ РїРѕРЅР°РІСЂРёРІС€РёРµСЃСЏ СЂРµС†РµРїС‚С‹ РІ СЃРїРёСЃРѕРє "РР·Р±СЂР°РЅРЅРѕРµ", Р° РїРµСЂРµРґ РїРѕС…РѕРґРѕРј РІ РјР°РіР°Р·РёРЅ СЃРєР°С‡Р°С‚СЊ СЃРІРѕРґРЅС‹Р№ СЃРїРёСЃРѕРє РїСЂРѕРґСѓРєС‚РѕРІ, РЅРµРѕР±С…РѕРґРёРјС‹С… РґР»СЏ РїСЂРёРіРѕС‚РѕРІР»РµРЅРёСЏ РѕРґРЅРѕРіРѕ РёР»Рё РЅРµСЃРєРѕР»СЊРєРёС… РІС‹Р±СЂР°РЅРЅС‹С… Р±Р»СЋРґ.
 
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat-square&logo=Django)](https://www.djangoproject.com/)
@@ -12,67 +12,68 @@
 [![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.yandex.ru/)
 
-## Подготовка и запуск проекта
-### Склонировать репозиторий на машину:
+## РџРѕРґРіРѕС‚РѕРІРєР° Рё Р·Р°РїСѓСЃРє РїСЂРѕРµРєС‚Р°
+### РЎРєР»РѕРЅРёСЂРѕРІР°С‚СЊ СЂРµРїРѕР·РёС‚РѕСЂРёР№ РЅР° РјР°С€РёРЅСѓ:
 ```
 git clone https://github.com/Kerones/foodgram-project-react
 ```
-## Для работы с удаленным сервером (на ubuntu):
-* Выполните вход на удаленный сервер
-* Установите docker на сервер:
+## Р”Р»СЏ СЂР°Р±РѕС‚С‹ СЃ СѓРґР°Р»РµРЅРЅС‹Рј СЃРµСЂРІРµСЂРѕРј (РЅР° ubuntu):
+* Р’С‹РїРѕР»РЅРёС‚Рµ РІС…РѕРґ РЅР° СѓРґР°Р»РµРЅРЅС‹Р№ СЃРµСЂРІРµСЂ
+* РЈСЃС‚Р°РЅРѕРІРёС‚Рµ docker РЅР° СЃРµСЂРІРµСЂ:
 ```
 sudo apt install docker.io 
 ```
-* Установите docker-compose на сервер:
+* РЈСЃС‚Р°РЅРѕРІРёС‚Рµ docker-compose РЅР° СЃРµСЂРІРµСЂ:
 
 ```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker compose
 ```
-* Локально отредаиктируйте файл infra/nginx.conf, вписав в строку server_name свой IP
-* Скопируйте файл docker-compose.production.yml из директории infra на север:
+* Р›РѕРєР°Р»СЊРЅРѕ РѕС‚СЂРµРґР°РёРєС‚РёСЂСѓР№С‚Рµ С„Р°Р№Р» infra/nginx.conf, РІРїРёСЃР°РІ РІ СЃС‚СЂРѕРєСѓ server_name СЃРІРѕР№ IP
+* РЎРєРѕРїРёСЂСѓР№С‚Рµ С„Р°Р№Р» docker-compose.production.yml РёР· РґРёСЂРµРєС‚РѕСЂРёРё infra РЅР° СЃРµРІРµСЂ:
 ```
 scp docker-compose.yml <username>@<host>:/home/<username>/docker-compose.yml
 ```
-* Создайте .env файл и впишите свои данные: 
+* РЎРѕР·РґР°Р№С‚Рµ .env С„Р°Р№Р» Рё РІРїРёС€РёС‚Рµ СЃРІРѕРё РґР°РЅРЅС‹Рµ: 
     ```
     DB_ENGINE=<django.db.backends.postgresql>
-    DB_NAME=<имя базы данных postgres>
-    DB_USER=<пользователь бд>
-    DB_PASSWORD=<пароль>
+    DB_NAME=<РёРјСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С… postgres>
+    DB_USER=<РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р±Рґ>
+    DB_PASSWORD=<РїР°СЂРѕР»СЊ>
     DB_HOST=<db>
     DB_PORT=<5432>
-    SECRET_KEY=<секретный ключ проекта django>
+    SECRET_KEY=<СЃРµРєСЂРµС‚РЅС‹Р№ РєР»СЋС‡ РїСЂРѕРµРєС‚Р° django>
     ```
-* Для работы с workflow добавьте в GitHub secrets переменные окружения:
+* Р”Р»СЏ СЂР°Р±РѕС‚С‹ СЃ workflow РґРѕР±Р°РІСЊС‚Рµ РІ GitHub secrets РїРµСЂРµРјРµРЅРЅС‹Рµ РѕРєСЂСѓР¶РµРЅРёСЏ:
     ```
-    DOCKER_USERNAME="имя пользователя докерхаб"
-    DOCKER_PASSWORD="пароль от докерхаб"
+    DOCKER_USERNAME="РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґРѕРєРµСЂС…Р°Р±"
+    DOCKER_PASSWORD="РїР°СЂРѕР»СЊ РѕС‚ РґРѕРєРµСЂС…Р°Р±"
         
-    SECRET_KEY="секретный ключ проекта Django"
+    SECRET_KEY="СЃРµРєСЂРµС‚РЅС‹Р№ РєР»СЋС‡ РїСЂРѕРµРєС‚Р° Django"
     
-    USER="username для подключения к серверу"
-    HOST="IP вашего сервера"
-    PASSPHRASE="пароль для сервера, если такой установлен"
-    SSH_KEY="ваш SSH ключ (можно получить командой cat ~/.ssh/id_rsa)"
+    USER="username РґР»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє СЃРµСЂРІРµСЂСѓ"
+    HOST="IP РІР°С€РµРіРѕ СЃРµСЂРІРµСЂР°"
+    PASSPHRASE="РїР°СЂРѕР»СЊ РґР»СЏ СЃРµСЂРІРµСЂР°, РµСЃР»Рё С‚Р°РєРѕР№ СѓСЃС‚Р°РЅРѕРІР»РµРЅ"
+    SSH_KEY="РІР°С€ SSH РєР»СЋС‡ (РјРѕР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ РєРѕРјР°РЅРґРѕР№ cat ~/.ssh/id_rsa)"
     ```
-* На сервере соберите docker-compose:
+* РќР° СЃРµСЂРІРµСЂРµ СЃРѕР±РµСЂРёС‚Рµ docker-compose:
   
 ```
 sudo docker compose -f docker-compose.production.yml up -d --build
 ```
-* Выполните следующие команды (только после первого деплоя):
-    - Примените миграции:
+* Р’С‹РїРѕР»РЅРёС‚Рµ СЃР»РµРґСѓСЋС‰РёРµ РєРѕРјР°РЅРґС‹ (С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ РїРµСЂРІРѕРіРѕ РґРµРїР»РѕСЏ):
+    - РџСЂРёРјРµРЅРёС‚Рµ РјРёРіСЂР°С†РёРё:
     ```
     sudo docker compose -f docker-compose.production.yml exec backend python manage.py makemigrations
     sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
     ```
-    - Загрузите подготовленные ингридиенты в базу данных:
+    - Р—Р°РіСЂСѓР·РёС‚Рµ РїРѕРґРіРѕС‚РѕРІР»РµРЅРЅС‹Рµ РёРЅРіСЂРёРґРёРµРЅС‚С‹ Рё С‚РµРіРё РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…:
     ```
-    sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_models
+    sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_models --path 'api/data/ingredients.json'
+    sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_models --path 'api/data/tags.json'
     ```
-    - Создайте суперпользователя Django:
+    - РЎРѕР·РґР°Р№С‚Рµ СЃСѓРїРµСЂРїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Django:
     ```
     sudo docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
     ```      
-<h3 align="center"> ???????Проект подготовил <a href="https://github.com/Kerones/" target="_blank">Василий Гантимуров</a> совместно с <a href="https://github.com/yandex-praktikum/"target="_blank">Yandex Practicum</a> <img src="https://yt3.googleusercontent.com/-pnsqu0xQYwxMhUVq-HZJHf691DEhTlEl1fZvjUtUwJIKMyTqXDBVvK7d2dSjFUTYdHFpTYvAo8=s900-c-k-c0x00ffffff-no-rj" height="18"</h3>
+<h3 align="center"> рџ‘ЁрџЏјвЂЌрџ’»РџСЂРѕРµРєС‚ РїРѕРґРіРѕС‚РѕРІРёР» <a href="https://github.com/Kerones/" target="_blank">Р’Р°СЃРёР»РёР№ Р“Р°РЅС‚РёРјСѓСЂРѕРІ</a> СЃРѕРІРјРµСЃС‚РЅРѕ СЃ <a href="https://github.com/yandex-praktikum/"target="_blank">Yandex Practicum</a> <img src="https://yt3.googleusercontent.com/-pnsqu0xQYwxMhUVq-HZJHf691DEhTlEl1fZvjUtUwJIKMyTqXDBVvK7d2dSjFUTYdHFpTYvAo8=s900-c-k-c0x00ffffff-no-rj" height="18"</h3>
