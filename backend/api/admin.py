@@ -10,11 +10,17 @@ class IngredientsInLine(admin.TabularInline):
     min_num = 1
     extra = 2
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class TagsInLine(admin.TabularInline):
     model = Recipe.tags.through
     min_num = 1
     extra = 0
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Favorite)
