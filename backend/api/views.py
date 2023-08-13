@@ -18,7 +18,8 @@ from .permissions import IsAuthorOrAdminOrReadOnly
 from .serializers import (CreateRecipeSerializer, FavoriteSerializer,
                           IngredientSerializer, RecipeSerializer,
                           ShoppingCartSerializer, ShowSubscriptionsSerializer,
-                          SubscriptionSerializer, TagSerializer)
+                          SubscriptionSerializer, TagSerializer,
+                          UpdateRecipeSerializer)
 
 
 class SubscribeView(APIView):
@@ -133,7 +134,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeSerializer
         if self.request.method == 'POST':
             return CreateRecipeSerializer
-        return CreateRecipeSerializer(context={'request': self.request})
+        if self.request.method == 'PATCH':
+            return UpdateRecipeSerializer
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

@@ -142,7 +142,7 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount')
 
 
-class CreateRecipeSerializer(serializers.ModelSerializer):
+class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
     """ Сериализатор создания/обновления рецепта. """
 
     author = CustomUserSerializer(read_only=True)
@@ -165,11 +165,28 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             'cooking_time'
         )
 
+    def create_ingredients(self, ingredients, recipe):
+        for i in ingredients:
+            ingredient = Ingredient.objects.get(id=i['id'])
+            RecipeIngredient.objects.create(
+                ingredient=ingredient, recipe=recipe, amount=i['amount']
+            )
+
+    def create_tags(self, tags, recipe):
+        for tag in tags:
+            RecipeTag.objects.create(recipe=recipe, tag=tag)
+
+    def to_representation(self, instance):
+        return RecipeSerializer(instance, context={
+            'request': self.context.get('request')
+        }).data
+
+
+class CreateRecipeSerializer(CreateUpdateRecipeSerializer):
     def validate(self, data):
         name = self.initial_data.get('name')
         author = self.context.get('request').user
-        if self.context['request'].method == 'POST' and Recipe.objects.filter(
-                author=author, name=name).exists():
+        if Recipe.objects.filter(author=author, name=name).exists():
             raise ValidationError({'name': 'Такой рецепт Вами уже добавлен'})
         ingredients = self.initial_data.get('ingredients')
         list = []
@@ -190,17 +207,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             list.append(ingredient['id'])
         return data
 
-    def create_ingredients(self, ingredients, recipe):
-        for i in ingredients:
-            ingredient = Ingredient.objects.get(id=i['id'])
-            RecipeIngredient.objects.create(
-                ingredient=ingredient, recipe=recipe, amount=i['amount']
-            )
-
-    def create_tags(self, tags, recipe):
-        for tag in tags:
-            RecipeTag.objects.create(recipe=recipe, tag=tag)
-
     def create(self, validated_data):
         """
         Создание рецепта.
@@ -214,6 +220,28 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         self.create_ingredients(ingredients, recipe)
         self.create_tags(tags, recipe)
         return recipe
+
+
+class UpdateRecipeSerializer(CreateUpdateRecipeSerializer):
+    def validate(self, data):
+        ingredients = self.initial_data.get('ingredients')
+        list = []
+        for ingredient in ingredients:
+            amount = ingredient['amount']
+            if int(amount) < 1:
+                raise ValidationError({
+                    'amount': 'Количество ингредиента должно быть больше 0'
+                })
+            if int(amount) > 32767:
+                raise ValidationError({
+                    'amount': 'Введено слишком большое количество'
+                })
+            if ingredient['id'] in list:
+                raise ValidationError({
+                    'ingredients': 'Ингредиенты должны быть уникальными'
+                })
+            list.append(ingredient['id'])
+        return data
 
     def update(self, instance, validated_data):
         """
@@ -234,11 +262,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         instance.cooking_time = validated_data.pop('cooking_time')
         instance.save()
         return instance
-
-    def to_representation(self, instance):
-        return RecipeSerializer(instance, context={
-            'request': self.context.get('request')
-        }).data
 
 
 class ShowFavoriteSerializer(serializers.ModelSerializer):
