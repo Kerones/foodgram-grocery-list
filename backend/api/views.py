@@ -131,8 +131,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RecipeSerializer
-        return CreateRecipeSerializer(
-            context={'request': self.request}, data=self.request.data)
+        if self.request.method == 'POST':
+            return CreateRecipeSerializer
+        return CreateRecipeSerializer(context={'request': self.request})
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
