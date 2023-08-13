@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import UniqueConstraint
 
@@ -52,6 +53,15 @@ class Subscription(models.Model):
                 name='user_author_unique'
             ),
         )
+
+    def validate_author(self, author, user):
+        if author == user:
+            raise ValidationError('Самоподписка запрещена')
+        return author
+
+    def clean(self):
+        self.author = self.validate_author(self.author, self.user)
+        return super().clean()
 
     def __str__(self):
         return f'Пользователь {self.user} подписался на {self.author}'

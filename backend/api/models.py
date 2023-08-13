@@ -117,15 +117,6 @@ class Recipe(models.Model):
                 name="unique_for_author",
             ),)
 
-    def validate_name(self, author, name):
-        if Recipe.objects.filter(author=author, name=name).exists():
-            raise ValidationError('Такой рецепт Вами уже добавлен')
-        return name
-
-    def clean(self):
-        self.name = self.validate_name(self.author, self.name)
-        return super().clean()
-
     def __str__(self):
         return self.name[:MAX_NAME_SIZE]
 

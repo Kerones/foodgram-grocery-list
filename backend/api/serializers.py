@@ -333,3 +333,8 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return ShowSubscriptionsSerializer(instance.author, context={
             'request': self.context.get('request')
         }).data
+
+    def validate(self, data):
+        if self.context.get('request').user == data.get('author'):
+            raise serializers.ValidationError('Самоподписка запрещена!')
+        return data
